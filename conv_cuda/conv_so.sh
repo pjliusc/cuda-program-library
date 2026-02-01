@@ -1,0 +1,1 @@
+nvcc -Xcompiler -fPIC -shared conv.cu -o conv_cu.so
