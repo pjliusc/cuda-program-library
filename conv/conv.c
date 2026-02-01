@@ -38,7 +38,7 @@ extern float* conv(float *A, float *B, int M, int N, int stride) {
     float *C = (float *)malloc(sizeR);
     for (int i = 0; i < R; i += stride) {
         for (int j = 0; j < R; j += stride) {
-            float *slice = getMatSquare(A, i, j, M, N);
+            float *slice = getMatSquare(A, i*stride, j*stride, M, N);
             C[i*R + j] = elmWise(slice, B, N);                  
         }
     }
