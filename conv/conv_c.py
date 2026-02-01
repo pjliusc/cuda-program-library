@@ -22,7 +22,6 @@ def main():
     lib.sobel3.argtypes = [
         np.ctypeslib.ndpointer(dtype=np.float32, ndim=1, flags="C_CONTIGUOUS"),
         ctypes.c_int,
-        ctypes.c_int,
         ctypes.c_int
     ]
 
@@ -67,7 +66,7 @@ def main():
     print("Running sobel filter..")
     for i in range(0, len(sample_set)):
         img_array = sample_set[i]
-        temp = lib.sobel3(img_array.ravel(), M, N, 1).contents
+        temp = lib.sobel3(img_array.ravel(), M, 1).contents
         result = np.array([i for i in temp]).reshape(result_size, result_size)
 
         img = Image.fromarray(result.astype('uint8'))
