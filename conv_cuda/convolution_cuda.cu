@@ -14,28 +14,31 @@ __global__ void convolutionGPU(float *image_input, float *kernel, float *output,
       }
     }
     output[r * output_size + c] = sum;
-
-    // DEBUG
-    if (r == 0 && c == 0) {
-        output[0] = 123.0f;
-    }
   }
 }
 
-extern "C" void conv(float *h_image_input, float *h_kernel, float *h_output, int M, int N, int stride) {
-  printf(">>> conv() CALLED on host <<<\n");
-  fflush(stdout);
-
+int main(int argc, char **argv) {
   // commandline inputs: M, N, stride
+  int M = (argc > 3) ? atoi(argv[1]) : 7;
+  int N = (argc > 3) ? atoi(argv[2]) : 3;
+  int stride = (argc > 3) ? atoi(argv[3]) : 1;
   size_t image_size = M * M * sizeof(float);
   size_t kernel_size = N * N * sizeof(float);
   int R = (M - N) / stride + 1;
   size_t output_size = R * R * sizeof(float);
 
   // host memory allocation
-  //float *h_image_input = (float *)malloc(image_size);
-  //float *h_kernel = (float *)malloc(kernel_size);
-  //float *h_output = (float *)malloc(output_size);
+  float *h_image_input = (float *)malloc(image_size);
+  float *h_kernel = (float *)malloc(kernel_size);
+  float *h_output = (float *)malloc(output_size);
+
+  // initialize matrices with random values
+  for (int i = 0; i < M * M; i++) {
+    h_image_input[i] = rand() % 100 / 100.0f;
+  }
+  for (int i = 0; i < N * N; i++) {
+    h_kernel[i] = rand() % 100 / 100.0f;
+  }
 
   // device memory
   float *d_image_input, *d_kernel, *d_output;
@@ -74,10 +77,12 @@ extern "C" void conv(float *h_image_input, float *h_kernel, float *h_output, int
   // copy results back to cpu
   cudaMemcpy(h_output, d_output, output_size, cudaMemcpyDeviceToHost);
 
-  //printf("CUDA execution time (M=%d, N=%d, stride=%d): %f seconds\n", M, N, stride, elapsed_ms/1000.0f);
+
+  printf("CUDA execution time (M=%d, N=%d, stride=%d): %f seconds\n", M, N, stride, elapsed_ms/1000.0f);
 
   // cleanup
-  //free(h_image_input); free(h_kernel); free(h_output);
+  free(h_image_input); free(h_kernel); free(h_output);
   cudaFree(d_image_input); cudaFree(d_kernel); cudaFree(d_output);
-  //return h_output;
+
+  return 0;
 }
