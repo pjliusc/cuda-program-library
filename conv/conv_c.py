@@ -53,6 +53,7 @@ def main():
 
     # run identity test with stride 1
     print("Running identity test with stride 1..")
+    str1time = time.time()
     for i in range(0, len(sample_set)):
         img_array = sample_set[i]
         temp = lib.conv(img_array.ravel(), ident.ravel(), M, N, 1).contents
@@ -61,6 +62,7 @@ def main():
         img = Image.fromarray(result.astype('uint8'))
         img.show()
         img.save(f"data/output/ident/{i}.png")
+    print(f"Time elapsed for 10 stride 1 images:{(time.time()-str1time)} s")
 
     # run sobel test
     print("Running sobel filter..")
