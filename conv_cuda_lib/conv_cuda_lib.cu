@@ -14,16 +14,11 @@ __global__ void convolutionGPU(float *image_input, float *kernel, float *output,
       }
     }
     output[r * output_size + c] = sum;
-
-    // DEBUG
-    if (r == 0 && c == 0) {
-        output[0] = 123.0f;
-    }
   }
 }
 
 extern "C" void conv(float *h_image_input, float *h_kernel, float *h_output, int M, int N, int stride) {
-  printf(">>> conv() CALLED on host <<<\n");
+  //printf(">>> conv() CALLED on host <<<\n");
   fflush(stdout);
 
   // commandline inputs: M, N, stride
@@ -79,5 +74,4 @@ extern "C" void conv(float *h_image_input, float *h_kernel, float *h_output, int
   // cleanup
   //free(h_image_input); free(h_kernel); free(h_output);
   cudaFree(d_image_input); cudaFree(d_kernel); cudaFree(d_output);
-  //return h_output;
 }

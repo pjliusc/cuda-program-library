@@ -19,7 +19,7 @@ __global__ void convolutionGPU(float *image_input, float *kernel, float *output,
 
 int main(int argc, char **argv) {
   // commandline inputs: M, N, stride
-  int M = (argc > 3) ? atoi(argv[1]) : 7;
+  int M = (argc > 3) ? atoi(argv[1]) : 28;
   int N = (argc > 3) ? atoi(argv[2]) : 3;
   int stride = (argc > 3) ? atoi(argv[3]) : 1;
   size_t image_size = M * M * sizeof(float);
@@ -77,8 +77,7 @@ int main(int argc, char **argv) {
   // copy results back to cpu
   cudaMemcpy(h_output, d_output, output_size, cudaMemcpyDeviceToHost);
 
-
-  printf("CUDA execution time (M=%d, N=%d, stride=%d): %f seconds\n", M, N, stride, elapsed_ms/1000.0f);
+  printf("CUDA execution time (M=%d, N=%d, stride=%d): %fms\n", M, N, stride, elapsed_ms);
 
   // cleanup
   free(h_image_input); free(h_kernel); free(h_output);
